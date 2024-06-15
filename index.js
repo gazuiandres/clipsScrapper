@@ -3,6 +3,7 @@ const downloadClips = require('./downloadClips')
 const cron = require("node-cron");
 
 const main = async () => {
+    console.log('STARTING SCRAPPER')
     await getClipsLink()
     await downloadClips()
 }
