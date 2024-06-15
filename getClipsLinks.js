@@ -9,6 +9,8 @@ const getClipsLink = async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
 
+  console.log('Browser ready')
+
   const maxClips = 21;
   let isKeepLoading = true;
   let counts = 0;
