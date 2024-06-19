@@ -13,5 +13,3 @@ cron.schedule("0 6 * * *", () => main(), {
 });
 
 console.log('CRON ACTIVE')
-
-main()
