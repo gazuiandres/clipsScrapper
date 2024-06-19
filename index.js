@@ -8,8 +8,10 @@ const main = async () => {
     await downloadClips()
 }
 
-cron.schedule("0 6 * * *", () => main(), {
-  timezone: "America/Mexico_City",
-});
+// cron.schedule("0 6 * * *", () => main(), {
+//   timezone: "America/Mexico_City",
+// });
 
-console.log('CRON ACTIVE')
+// console.log('CRON ACTIVE')
+
+main()

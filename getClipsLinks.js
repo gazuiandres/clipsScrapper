@@ -11,7 +11,7 @@ const getClipsLink = async () => {
 
   console.log('Browser ready')
 
-  const maxClips = 21;
+  const maxClips = 20;
   let isKeepLoading = true;
   let counts = 0;
   let tries = 0;
@@ -21,11 +21,24 @@ const getClipsLink = async () => {
     );
     await page.waitForTimeout(5000);
 
-    await page.getByText("1K followers").dblclick();
+    const isClipsFound = await page.evaluate(() => {
+      const items = document.querySelectorAll(
+        '[data-a-target="preview-card-image-link"]'
+      );
+
+      return items.length >= 1
+    });
+
+
+    if(!isClipsFound) {
+      console.log('No clips found')
+      process.exit(0)
+    }
+    
+
     await page
       .locator(".scrollable-trigger__trigger-area--up")
       .scrollIntoViewIfNeeded();
-
     while (isKeepLoading) {
       let itemsCount = await page.evaluate(() => {
         const items = document.querySelectorAll(

@@ -3,13 +3,19 @@ const path = require("node:path");
 const es = require("event-stream");
 const Queue = require("bull");
 const Axios = require("axios");
-const lineQueue = new Queue("line_queue", "redis://127.0.0.1:6379");
 
 const cleanFolder = require("./utils/cleanFolder");
 const createFolder = require("./utils/createFolder");
 const folder = path.resolve(__dirname, "clips");
 
-let counter = 0
+let counter = 0;
+
+const lineQueue = new Queue("line_queue", "redis://127.0.0.1:6379");
+
+lineQueue.clean(0, "delayed");
+lineQueue.clean(0, "wait");
+lineQueue.clean(0, "paused");
+lineQueue.clean(0, "failed");
 
 lineQueue.process(async (job, done) => {
   const { data } = job;
@@ -24,7 +30,7 @@ lineQueue.process(async (job, done) => {
 
   response.data.pipe(fs.createWriteStream(`${folder}/clip-${counter}.mp4`));
   response.data.on("end", () => {
-    counter++
+    counter++;
     done();
   });
 });
@@ -44,8 +50,14 @@ const main = async () => {
     .on("end", () => {
       setInterval(async () => {
         const activeJobs = (await lineQueue.getJobs(["active"])).length;
-        if (!activeJobs) process.exit();
+        if (!activeJobs) {
+          lineQueue.clean(0, "delayed");
+          lineQueue.clean(0, "paused");
+          lineQueue.clean(0, "failed");
+          lineQueue.clean();
+          process.exit();
+        }
       }, 2000);
     });
 };
-module.exports = main
+module.exports = main;
