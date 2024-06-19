@@ -55,6 +55,7 @@ const main = async () => {
           lineQueue.clean(0, "paused");
           lineQueue.clean(0, "failed");
           lineQueue.clean();
+          console.log('CLIPS DOWNLOADED')
           process.exit();
         }
       }, 2000);
