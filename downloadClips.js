@@ -28,7 +28,7 @@ lineQueue.process(async (job, done) => {
     responseType: "stream",
   });
 
-  response.data.pipe(fs.createWriteStream(`${folder}/clip-${counter}.mp4`));
+  response.data.pipe(fs.createWriteStream(`${folder}/clip-${Date.now()}-${counter}.mp4`));
   response.data.on("end", () => {
     counter++;
     done();
